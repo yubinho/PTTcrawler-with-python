@@ -28,4 +28,5 @@ python套件
     ![This is a alt text.](/image/board.png)
 
 5. 顯示結果
+
     ![This is a alt text.](/image/result.png)
