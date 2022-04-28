@@ -18,15 +18,15 @@ python套件
 
 2. 輸入瀏覽器的user agent [點此查詢](https://www.whatismybrowser.com/detect/what-is-my-user-agent/)
 
-    ![This is a alt text.](/image/userAgent.png)
+    ![This is a alt text.](https://github.com/yubinho/PTTcrawler-with-python/blob/main/image/userAgent.PNG)
 
 3. 輸入文章日期
     
-    ![This is a alt text.](/image/date.png)
+    ![This is a alt text.](https://github.com/yubinho/PTTcrawler-with-python/blob/main/image/date.PNG)
 4. 輸入看板名稱
     
-    ![This is a alt text.](/image/board.png)
+    ![This is a alt text.](https://github.com/yubinho/PTTcrawler-with-python/blob/main/image/board.PNG)
 
 5. 顯示結果
 
-    ![This is a alt text.](/image/result.png)
+    ![This is a alt text.](https://github.com/yubinho/PTTcrawler-with-python/blob/main/image/result.PNG)
