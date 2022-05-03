@@ -8,7 +8,15 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import jieba
 
+isContinue = True
+isFind = False
+page = 0
+
 def GetData(url, postDate,userAgent):
+    global page 
+    page += 1
+    print("finding page"+str(page)+"...")
+
     # create request object including Request Headers to pretend browser
     request = req.Request(url, headers={
         "cookie": "over18=1",
@@ -19,25 +27,30 @@ def GetData(url, postDate,userAgent):
     soup = bs4.BeautifulSoup(data, "html.parser")  # parse html format by bs4
     titles = soup.find_all("div", class_="title")  # find title class
     file = open("data.txt", "a", encoding="utf-8")
-    isContinue = False
+
     for title in titles:
         if title.a != None:  # exclude those posts have been deleted
             date = soup.find("div", class_="date")
             newdate = date.text.replace(" ", "")
             if newdate == str(postDate):  # judge post date
                 print(title.a.string)
-                isContinue = True
+                global isFind
+                isFind = True
             # store to txt
                 file.write(str(title.a.string))
                 # # put data into csv
                 # with open("data3.csv", "a", newline='') as csvfile:
                 #     writer = csv.writer(csvfile, delimiter=' ')
                 #     writer.writerow(str(title.a.string))
+            else:
+                if isFind == True:
+                    global isContinue
+                    isContinue = False
     file.close()
 
     nextLink = soup.find("a", string="‹ 上頁")  # catch url of last page
     # print(nextLink["href"])
-    if(isContinue):
+    if isContinue == True:
         return nextLink["href"]
     else:
         return None
@@ -71,14 +84,16 @@ def create_cloudword():
     plt.axis("off")
     plt.show()
 
+
+
+
 if __name__ == '__main__':
     # catch pages
     userAgent = input("please input user agent of browser\n")
     postDate = input("please input post date ex.4/13\n")
-    boardName = input("please input post date ex.Gossiping\n")
+    boardName = input("please input board name ex.Gossiping\n")
     PageURL = 'https://www.ptt.cc/bbs/'+boardName+'/index.html'
-
-    while not GetData(PageURL, postDate,userAgent) == None:  # finding all posts of assigned date
+    while isContinue == True and GetData(PageURL, postDate,userAgent) != None:  # finding all posts of assigned date
         PageURL = 'https://www.ptt.cc'+GetData(PageURL, postDate,userAgent)
 
     create_cloudword()
