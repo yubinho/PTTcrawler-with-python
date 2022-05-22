@@ -2,6 +2,7 @@
 import urllib.request as req
 import bs4
 import csv
+import os
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -12,8 +13,9 @@ isContinue = True
 isFind = False
 page = 0
 
-def GetData(url, postDate,userAgent):
-    global page 
+
+def GetData(url, postDate, userAgent):
+    global page
     page += 1
     print("finding page"+str(page)+"...")
 
@@ -55,12 +57,13 @@ def GetData(url, postDate,userAgent):
     else:
         return None
 
+
 def create_cloudword():
     with open('resource/stopword.txt', 'r', encoding='utf-8') as file:  # customized illegal word
         stops = file.read().split('\n')
 
     text_from_file_with_apath = open(
-        'data.txt', encoding='utf8').read()  # data 
+        'data.txt', encoding='utf8').read()  # data
 
     breakword = jieba.cut(
         text_from_file_with_apath, cut_all=False)  # default hyphenation
@@ -68,7 +71,7 @@ def create_cloudword():
     final_words = []  # legal word
 
     for word in breakword:
-        if word not in stops: 
+        if word not in stops:
             final_words.append(word)
 
     wl_space_split = " ".join(final_words)
@@ -78,13 +81,11 @@ def create_cloudword():
     abel_mask = np.array(Image.open("resource/heart.jpg"))  # image outline
 
     my_wordcloud = WordCloud(background_color='white', mask=abel_mask,
-                            font_path=font_path).generate(wl_space_split)  # create wordcloud
+                             font_path=font_path).generate(wl_space_split)  # create wordcloud
     plt.figure(figsize=(10, 10))
     plt.imshow(my_wordcloud)
     plt.axis("off")
     plt.show()
-
-
 
 
 if __name__ == '__main__':
@@ -92,17 +93,18 @@ if __name__ == '__main__':
     userAgent = input("please input user agent of browser\n")
     postDate = input("please input post date ex.4/13\n")
     boardName = input("please input board name ex.Gossiping\n")
+    data_path = "./data.txt"
+    if os.path.isfile(data_path):
+        file = open(data_path, 'w')
+        file.close()
     PageURL = 'https://www.ptt.cc/bbs/'+boardName+'/index.html'
-    while isContinue == True and GetData(PageURL, postDate,userAgent) != None:  # finding all posts of assigned date
-        PageURL = 'https://www.ptt.cc'+GetData(PageURL, postDate,userAgent)
+    # finding all posts of assigned date
+    while isContinue == True and GetData(PageURL, postDate, userAgent) != None:
+        PageURL = 'https://www.ptt.cc'+GetData(PageURL, postDate, userAgent)
 
     create_cloudword()
-
 
     # count = 0
     # while count < 5:
     #     PageURL = 'https://www.ptt.cc'+GetData(PageURL, postDate,userAgent)
     #     count+=1
-    
-
-
